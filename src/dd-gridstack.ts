@@ -49,13 +49,15 @@ export class DDGridStack {
         const grid = dEl.el.gridstackNode.grid;
         let handles = dEl.el.getAttribute('gs-resize-handles') ? dEl.el.getAttribute('gs-resize-handles') : grid.opts.resizable.handles;
         let autoHide = !grid.opts.alwaysShowResizeHandle;
+        let fixedAspectRatio = dEl.el.getAttribute('gs-fixed-aspect-ratio') ? parseFloat(dEl.el.getAttribute('gs-fixed-aspect-ratio')) : undefined;
         dEl.setupResizable({
           ...grid.opts.resizable,
           ...{ handles, autoHide },
           ...{
             start: opts.start,
             stop: opts.stop,
-            resize: opts.resize
+            resize: opts.resize,
+            fixedAspectRatio: fixedAspectRatio
           }
         });
       }

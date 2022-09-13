@@ -19,6 +19,7 @@ export interface DDResizableOpt {
   maxWidth?: number;
   minHeight?: number;
   minWidth?: number;
+  fixedAspectRatio?: number;
   start?: (event: Event, ui: DDUIData) => void;
   stop?: (event: Event) => void;
   resize?: (event: Event, ui: DDUIData) => void;
@@ -187,7 +188,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected _resizing(event: MouseEvent, dir: string): DDResizable {
     this.scrolled = this.scrollEl.scrollTop - this.scrollY;
-    this.temporalRect = this._getChange(event, dir);
+    this.temporalRect = this._getChange(event, dir, this.option.fixedAspectRatio);
     this._applyChange();
     const ev = Utils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
     if (this.option.resize) {
@@ -236,7 +237,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  protected _getChange(event: MouseEvent, dir: string): Rect {
+  protected _getChange(event: MouseEvent, dir: string, fixedAspectRatio?: number): Rect {
     const oEvent = this.startEvent;
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
@@ -248,18 +249,50 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     const offsetX = event.clientX - oEvent.clientX;
     const offsetY = event.clientY - oEvent.clientY;
 
-    if (dir.indexOf('e') > -1) {
-      newRect.width += offsetX;
-    } else if (dir.indexOf('w') > -1) {
-      newRect.width -= offsetX;
-      newRect.left += offsetX;
+    if (typeof fixedAspectRatio !== 'undefined')
+    {
+      // Horizontal change is larger?
+      if (offsetX > offsetY) {
+        if (dir.indexOf('e') > -1) {
+          newRect.width += offsetX;
+          newRect.height += Math.round(offsetX / fixedAspectRatio);
+        } else if (dir.indexOf('w') > -1) {
+          newRect.width -= offsetX;
+          newRect.left += offsetX;
+
+          newRect.height -= Math.round(offsetX / fixedAspectRatio);
+          newRect.top += Math.round(offsetX / fixedAspectRatio);
+        }
+      } else {
+        if (dir.indexOf('s') > -1) {
+          newRect.height += offsetY;
+          newRect.width += Math.round(offsetY * fixedAspectRatio);
+        } else if (dir.indexOf('n') > -1) {
+          newRect.height -= offsetY;
+          newRect.top += offsetY;
+
+          newRect.width -= Math.round(offsetY * fixedAspectRatio);
+          newRect.left += Math.round(offsetY * fixedAspectRatio);
+        }
+      }
     }
-    if (dir.indexOf('s') > -1) {
-      newRect.height += offsetY;
-    } else if (dir.indexOf('n') > -1) {
-      newRect.height -= offsetY;
-      newRect.top += offsetY
+    else
+    {
+      if (dir.indexOf('e') > -1) { // East
+        newRect.width += offsetX;
+      } else if (dir.indexOf('w') > -1) { // West
+        newRect.width -= offsetX;
+        newRect.left += offsetX;
+      }
+
+      if (dir.indexOf('s') > -1) { // South           // HERE
+        newRect.height += offsetY;
+      } else if (dir.indexOf('n') > -1) { // North
+        newRect.height -= offsetY;
+        newRect.top += offsetY
+      }
     }
+
     const constrain = this._constrainSize(newRect.width, newRect.height);
     if (Math.round(newRect.width) !== Math.round(constrain.width)) { // round to ignore slight round-off errors
       if (dir.indexOf('w') > -1) {
