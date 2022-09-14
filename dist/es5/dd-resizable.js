@@ -247,7 +247,7 @@ var DDResizable = /** @class */ (function (_super) {
         };
         var offsetX = event.clientX - oEvent.clientX;
         var offsetY = event.clientY - oEvent.clientY;
-        if (typeof fixedAspectRatio !== 'undefined') {
+        if (typeof fixedAspectRatio !== 'undefined' && fixedAspectRatio != 0 && !isNaN(fixedAspectRatio) && isFinite(fixedAspectRatio)) {
             if (dir.indexOf('e') > -1) {
                 newRect.width += offsetX;
                 newRect.height += Math.round(offsetX / fixedAspectRatio);
