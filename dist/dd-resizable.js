@@ -228,30 +228,25 @@ class DDResizable extends dd_base_impl_1.DDBaseImplement {
         const offsetX = event.clientX - oEvent.clientX;
         const offsetY = event.clientY - oEvent.clientY;
         if (typeof fixedAspectRatio !== 'undefined') {
-            // Horizontal change is larger?
-            if (offsetX > offsetY) {
-                if (dir.indexOf('e') > -1) {
-                    newRect.width += offsetX;
-                    newRect.height += Math.round(offsetX / fixedAspectRatio);
-                }
-                else if (dir.indexOf('w') > -1) {
-                    newRect.width -= offsetX;
-                    newRect.left += offsetX;
-                    newRect.height -= Math.round(offsetX / fixedAspectRatio);
-                    newRect.top += Math.round(offsetX / fixedAspectRatio);
-                }
+            if (dir.indexOf('e') > -1) {
+                newRect.width += offsetX;
+                newRect.height += Math.round(offsetX / fixedAspectRatio);
             }
-            else {
-                if (dir.indexOf('s') > -1) {
-                    newRect.height += offsetY;
-                    newRect.width += Math.round(offsetY * fixedAspectRatio);
-                }
-                else if (dir.indexOf('n') > -1) {
-                    newRect.height -= offsetY;
-                    newRect.top += offsetY;
-                    newRect.width -= Math.round(offsetY * fixedAspectRatio);
-                    newRect.left += Math.round(offsetY * fixedAspectRatio);
-                }
+            else if (dir.indexOf('w') > -1) {
+                newRect.width -= offsetX;
+                newRect.left += offsetX;
+                newRect.height -= Math.round(offsetX / fixedAspectRatio);
+                newRect.top += Math.round(offsetX / fixedAspectRatio);
+            }
+            if (dir.indexOf('s') > -1) {
+                newRect.height += offsetY;
+                newRect.width += Math.round(offsetY * fixedAspectRatio);
+            }
+            else if (dir.indexOf('n') > -1) {
+                newRect.height -= offsetY;
+                newRect.top += offsetY;
+                newRect.width -= Math.round(offsetY * fixedAspectRatio);
+                newRect.left += Math.round(offsetY * fixedAspectRatio);
             }
         }
         else {
