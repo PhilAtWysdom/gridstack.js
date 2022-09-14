@@ -249,7 +249,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     const offsetX = event.clientX - oEvent.clientX;
     const offsetY = event.clientY - oEvent.clientY;
 
-    if (typeof fixedAspectRatio !== 'undefined')
+    if (typeof fixedAspectRatio !== 'undefined' && fixedAspectRatio != 0 && !isNaN(fixedAspectRatio) && isFinite(fixedAspectRatio))
     {
       if (dir.indexOf('e') > -1) {
         newRect.width += offsetX;
