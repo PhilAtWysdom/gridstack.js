@@ -313,6 +313,11 @@ class GridStack {
         }
         return this._placeholder;
     }
+
+    change() {
+        this._triggerChangeEvent();
+    }
+
     /**
      * add a new widget and returns it.
      *
