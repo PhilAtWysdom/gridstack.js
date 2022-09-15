@@ -342,6 +342,9 @@ var GridStack = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    GridStack.prototype.change = function () {
+        this._triggerChangeEvent();
+    };
     /**
      * add a new widget and returns it.
      *

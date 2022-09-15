@@ -390,6 +390,10 @@ export class GridStack {
     this._updateWindowResizeEvent();
   }
 
+  public change() {
+    this._triggerChangeEvent();
+  }
+
   /**
    * add a new widget and returns it.
    *

@@ -91,6 +91,7 @@ export declare class GridStack {
      * @param opts
      */
     constructor(el: GridHTMLElement, opts?: GridStackOptions);
+    change(): void;
     /**
      * add a new widget and returns it.
      *
