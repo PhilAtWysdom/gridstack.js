@@ -251,26 +251,57 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
     if (typeof fixedAspectRatio !== 'undefined' && fixedAspectRatio != 0 && !isNaN(fixedAspectRatio) && isFinite(fixedAspectRatio))
     {
-      if (dir.indexOf('e') > -1) {
-        newRect.width += offsetX;
-        newRect.height += Math.round(offsetX / fixedAspectRatio);
-      } else if (dir.indexOf('w') > -1) {
-        newRect.width -= offsetX;
-        newRect.left += offsetX;
+      // If the window is being resized using the corner
+      if (dir.length > 1) {
 
-        newRect.height -= Math.round(offsetX / fixedAspectRatio);
-        newRect.top += Math.round(offsetX / fixedAspectRatio);
-      }
+        if (offsetX > offsetY) {
+          if (dir.indexOf('e') > -1) {
+            newRect.width += offsetX;
+            newRect.height += Math.round(offsetX / fixedAspectRatio);
+          } else if (dir.indexOf('w') > -1) {
+            newRect.width -= offsetX;
+            newRect.left += offsetX;
 
-      if (dir.indexOf('s') > -1) {
-        newRect.height += offsetY;
-        newRect.width += Math.round(offsetY * fixedAspectRatio);
-      } else if (dir.indexOf('n') > -1) {
-        newRect.height -= offsetY;
-        newRect.top += offsetY;
+            newRect.height -= Math.round(offsetX / fixedAspectRatio);
+            newRect.top += Math.round(offsetX / fixedAspectRatio);
+          }
+        } else {
+          if (dir.indexOf('s') > -1) {
+            newRect.height += offsetY;
+            newRect.width += Math.round(offsetY * fixedAspectRatio);
+          } else if (dir.indexOf('n') > -1) {
+            newRect.height -= offsetY;
+            newRect.top += offsetY;
 
-        newRect.width -= Math.round(offsetY * fixedAspectRatio);
-        newRect.left += Math.round(offsetY * fixedAspectRatio);
+            newRect.width -= Math.round(offsetY * fixedAspectRatio);
+            newRect.left += Math.round(offsetY * fixedAspectRatio);
+          }
+        }
+        
+
+
+      } else {
+        if (dir.indexOf('e') > -1) {
+          newRect.width += offsetX;
+          newRect.height += Math.round(offsetX / fixedAspectRatio);
+        } else if (dir.indexOf('w') > -1) {
+          newRect.width -= offsetX;
+          newRect.left += offsetX;
+
+          newRect.height -= Math.round(offsetX / fixedAspectRatio);
+          newRect.top += Math.round(offsetX / fixedAspectRatio);
+        }
+
+        if (dir.indexOf('s') > -1) {
+          newRect.height += offsetY;
+          newRect.width += Math.round(offsetY * fixedAspectRatio);
+        } else if (dir.indexOf('n') > -1) {
+          newRect.height -= offsetY;
+          newRect.top += offsetY;
+
+          newRect.width -= Math.round(offsetY * fixedAspectRatio);
+          newRect.left += Math.round(offsetY * fixedAspectRatio);
+        }
       }
     }
     else
