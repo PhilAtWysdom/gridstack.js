@@ -253,12 +253,12 @@ var DDResizable = /** @class */ (function (_super) {
                 if (offsetX > offsetY) {
                     if (dir.indexOf('e') > -1) {
                         newRect.width += offsetX;
-                        newRect.height += Math.round(offsetX / fixedAspectRatio);
+                        newRect.height += Math.round(offsetX / fixedAspectRatio) - this.scrolled;
                     }
                     else if (dir.indexOf('w') > -1) {
                         newRect.width -= offsetX;
                         newRect.left += offsetX;
-                        newRect.height -= Math.round(offsetX / fixedAspectRatio);
+                        newRect.height -= Math.round(offsetX / fixedAspectRatio) + this.scrolled;
                         newRect.top += Math.round(offsetX / fixedAspectRatio);
                     }
                 }
