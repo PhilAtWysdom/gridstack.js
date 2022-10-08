@@ -238,27 +238,28 @@ var DDResizable = /** @class */ (function (_super) {
     };
     /** @internal */
     DDResizable.prototype._getChange = function (event, dir, fixedAspectRatio) {
+        var fixedAspect = typeof (fixedAspectRatio) !== 'undefined' && fixedAspectRatio != 0 && !isNaN(fixedAspectRatio) && isFinite(fixedAspectRatio);
         var oEvent = this.startEvent;
         var newRect = {
             width: this.originalRect.width,
-            height: this.originalRect.height + this.scrolled,
+            height: this.originalRect.height + (fixedAspect ? 0 : this.scrolled),
             left: this.originalRect.left,
-            top: this.originalRect.top - this.scrolled
+            top: this.originalRect.top - (fixedAspect ? 0 : this.scrolled)
         };
         var offsetX = event.clientX - oEvent.clientX;
         var offsetY = event.clientY - oEvent.clientY;
-        if (typeof fixedAspectRatio !== 'undefined' && fixedAspectRatio != 0 && !isNaN(fixedAspectRatio) && isFinite(fixedAspectRatio)) {
+        if (fixedAspect) {
             // If the window is being resized using the corner
             if (dir.length > 1) {
                 if (offsetX > offsetY) {
                     if (dir.indexOf('e') > -1) {
                         newRect.width += offsetX;
-                        newRect.height += Math.round(offsetX / fixedAspectRatio) - this.scrolled;
+                        newRect.height += Math.round(offsetX / fixedAspectRatio);
                     }
                     else if (dir.indexOf('w') > -1) {
                         newRect.width -= offsetX;
                         newRect.left += offsetX;
-                        newRect.height -= Math.round(offsetX / fixedAspectRatio) + this.scrolled;
+                        newRect.height -= Math.round(offsetX / fixedAspectRatio);
                         newRect.top += Math.round(offsetX / fixedAspectRatio);
                     }
                 }

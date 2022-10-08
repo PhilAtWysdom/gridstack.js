@@ -238,18 +238,19 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _getChange(event: MouseEvent, dir: string, fixedAspectRatio?: number): Rect {
+    const fixedAspect = typeof(fixedAspectRatio) !== 'undefined' && fixedAspectRatio != 0 && !isNaN(fixedAspectRatio) && isFinite(fixedAspectRatio);
     const oEvent = this.startEvent;
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
-      height: this.originalRect.height + this.scrolled,
+      height: this.originalRect.height + (fixedAspect ? 0 : this.scrolled),
       left: this.originalRect.left,
-      top: this.originalRect.top - this.scrolled
+      top: this.originalRect.top - (fixedAspect ? 0 : this.scrolled)
     };
 
     const offsetX = event.clientX - oEvent.clientX;
     const offsetY = event.clientY - oEvent.clientY;
 
-    if (typeof fixedAspectRatio !== 'undefined' && fixedAspectRatio != 0 && !isNaN(fixedAspectRatio) && isFinite(fixedAspectRatio))
+    if (fixedAspect)
     {
       // If the window is being resized using the corner
       if (dir.length > 1) {
@@ -257,12 +258,12 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
         if (offsetX > offsetY) {
           if (dir.indexOf('e') > -1) {
             newRect.width += offsetX;
-            newRect.height += Math.round(offsetX / fixedAspectRatio) - this.scrolled;
+            newRect.height += Math.round(offsetX / fixedAspectRatio);
           } else if (dir.indexOf('w') > -1) {
             newRect.width -= offsetX;
             newRect.left += offsetX;
 
-            newRect.height -= Math.round(offsetX / fixedAspectRatio) + this.scrolled;
+            newRect.height -= Math.round(offsetX / fixedAspectRatio);
             newRect.top += Math.round(offsetX / fixedAspectRatio);
           }
         } else {
